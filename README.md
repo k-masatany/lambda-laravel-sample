@@ -1,4 +1,4 @@
-#
+# Lambda Laravel Template
 
 ## Lambda Layer Deploy
 
@@ -12,10 +12,17 @@ edit scripts for your environmets.
 make && make deploy
 ```
 
+## Laravel Install
+
+```
+cd serc/laravel
+php composer.phar install --no-dev
+```
+
 ## Laravel Deploy
 
 ```
-$sam package \ 23:57:00
+$sam package \
   --template-file template.yml \
   --output-template-file serverless-laravel.yml \
   --s3-bucket <bucket-name>
