@@ -15,7 +15,7 @@ make && make deploy
 ## Laravel Install
 
 ```
-cd serc/laravel
+cd src/laravel
 php composer.phar install --no-dev
 ```
 
