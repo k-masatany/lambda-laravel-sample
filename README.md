@@ -1,5 +1,7 @@
 # Lambda Laravel Template
 
+Reference: https://github.com/stackery/php-lambda-layer
+
 ## Lambda Layer Deploy
 
 ```
