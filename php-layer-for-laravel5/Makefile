@@ -1,17 +1,17 @@
 ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-php71.zip:
-	docker run --rm -v $(ROOT_DIR):/opt/layer lambci/lambda:build-nodejs8.10 /opt/layer/build.sh
+php-layer.zip:
+	docker run --rm -v $(ROOT_DIR):/opt/layer amazonlinux:2 /opt/layer/build.sh
 
-upload: php71.zip
+upload: php-layer.zip
 	./upload.sh
 
-publish: php71.zip
+publish: php-layer.zip
 	./publish.sh
 
-deploy: php71.zip
+deploy: php-layer.zip
 	./upload.sh
 	./publish.sh
 
 clean:
-	rm php71.zip
+	rm php-layer.zip

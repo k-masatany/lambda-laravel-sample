@@ -19,7 +19,7 @@ function start_webserver()
             // exec the command
             $HANDLER = getenv('_HANDLER');
             chdir('/var/task');
-            exec("PHP_INI_SCAN_DIR=/opt/etc/php-7.1.d/:/var/task/php-7.1.d/:/opt/php-7.1.d/ php -S localhost:8000 -c /var/task/php.ini -d extension_dir=/opt/lib/php/7.1/modules/ '$HANDLER'");
+            exec("PHP_INI_SCAN_DIR=/opt/etc/php.d/:/var/task/php.d/:/opt/php.d/ php -S localhost:8000 -c /var/task/php.ini -d extension_dir=/opt/lib/php/modules/ '$HANDLER'");
             exit;
 
         // return the child pid to parent

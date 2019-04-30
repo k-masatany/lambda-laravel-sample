@@ -14,7 +14,7 @@ Resources:
       Timeout: 30
       Tracing: Active
       Layers:
-        - !Sub arn:aws:lambda:${AWS::Region}:764791742448:layer:php71-laravel:6
+        - !Sub arn:aws:lambda:${AWS::Region}:764791742448:layer:php-layer:6
       Events:
         api:
           Type: Api
