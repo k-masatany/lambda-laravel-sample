@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Laravel Lambda Template
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Environment:
+      Variables:
+        # Laravel environment variables
+        APP_STORAGE: '/tmp'
+
+Parameters:
+  AppName:
+    Type: String
+    Default: Laravel
+
+  Env:
+    Type: String
+    AllowedValues:
+      - prod
+      - stg
+    Default: stg
+
+Mappings:
+  EnvMap:
+    prod:
+      AppEnv: production
+    stg:
+      AppEnv: staging
+
+Resources:
+  Website:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AppName}-${Env}
+      CodeUri: ../../dest
+      Runtime: provided
+      Handler: public/index.php
+      MemorySize: 1028
+      Timeout: 30
+      Tracing: Active
+      Layers:
+        - !Sub arn:aws:lambda:${AWS::Region}:209497400698:layer:php-73-fpm:6
+      Events:
+        # The function will match all HTTP URLs
+        HttpRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+        HttpSubPaths:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          TZ: Asia/Tokyo
+          APP_ENV: !FindInMap [EnvMap, !Ref Env, AppEnv]
+  Artisan:
+      Type: AWS::Serverless::Function
+      Properties:
+          FunctionName: !Sub ${AppName}-${Env}-artisan
+          CodeUri: ../../dest
+          Runtime: provided
+          Handler: artisan
+          Timeout: 120
+          Layers:
+              # PHP runtime
+              - 'arn:aws:lambda:us-east-1:209497400698:layer:php-73:6'
+              # Console layer
+              - 'arn:aws:lambda:us-east-1:209497400698:layer:console:6'
+      Environment:
+        Variables:
+          TZ: Asia/Tokyo
+          APP_ENV: !FindInMap [EnvMap, !Ref Env, AppEnv]

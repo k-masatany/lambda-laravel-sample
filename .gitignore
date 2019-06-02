@@ -1,0 +1,5 @@
+dest/*
+!.keep
+.env.stg
+.env.prod
+tmp/*

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -eu
+
+# Requirements
+#   awscli
+
+# 環境変数設定
+DEPLOY_ENV=$1
+REGION=ap-northeast-1
+APP_NAME=laravel       # only alphanumeric and underscore
+SAM_BUCKET=s3-bucket
+
+case ${DEPLOY_ENV} in
+  "stg" )
+    printf "Start deploy for \e[37;44;1m ${DEPLOY_ENV} \e[m\n" ;;
+  "prod" )
+    printf "Start deploy for \e[37;41;1m ${DEPLOY_ENV} \e[m\n" ;;
+  * )
+    printf "\e[35m${DEPLOY_ENV}\e[m is not valid deploy target!\n" && exit 1 ;;
+esac
+
+# Build Laravel Application
+rm -rf dest/*
+cp -r src/* dest/
+rm -rf dest/vendor
+cd dest
+composer install --no-dev
+cd ../
+
+# set env
+cp .env.${DEPLOY_ENV} dest/.env
+
+# package
+sam package \
+    --template-file server/deploy/template.yml \
+    --output-template-file server/deploy/${APP_NAME}.${DEPLOY_ENV}.yml \
+    --s3-bucket ${SAM_BUCKET}
+
+# deploy
+sam deploy \
+    --template-file server/deploy/${APP_NAME}.${DEPLOY_ENV}.yml \
+    --stack-name ${APP_NAME}-${DEPLOY_ENV} \
+    --capabilities CAPABILITY_IAM \
+    --parameter-overrides Env=${DEPLOY_ENV}
+
+# (optional) deploy assets
+# aws s3 sync src/public/css s3://assets.${APP_NAME}-${DEPLOY_ENV}/css
+# aws s3 sync src/public/js s3://assets.${APP_NAME}-${DEPLOY_ENV}/js
+# aws s3 sync src/public/svg s3://assets.${APP_NAME}-${DEPLOY_ENV}/svg
+# aws s3 sync src/public/fonts s3://assets.${APP_NAME}-${DEPLOY_ENV}/fonts
