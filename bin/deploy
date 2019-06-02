@@ -9,6 +9,7 @@ set -eu
 DEPLOY_ENV=$1
 REGION=ap-northeast-1
 APP_NAME=laravel       # only alphanumeric and underscore
+STACK_NAME=laravel       # only alphanumeric and hyphen
 SAM_BUCKET=s3-bucket
 
 case ${DEPLOY_ENV} in
@@ -40,7 +41,7 @@ sam package \
 # deploy
 sam deploy \
     --template-file server/deploy/${APP_NAME}.${DEPLOY_ENV}.yml \
-    --stack-name ${APP_NAME}-${DEPLOY_ENV} \
+    --stack-name ${STACK_NAME}_${DEPLOY_ENV} \
     --capabilities CAPABILITY_IAM \
     --parameter-overrides Env=${DEPLOY_ENV}
 
