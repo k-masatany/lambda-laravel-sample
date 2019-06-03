@@ -67,9 +67,9 @@ Resources:
           Timeout: 120
           Layers:
               # PHP runtime
-              - 'arn:aws:lambda:us-east-1:209497400698:layer:php-73:6'
+              - 'arn:aws:lambda:${AWS::Region}:209497400698:layer:php-73:6'
               # Console layer
-              - 'arn:aws:lambda:us-east-1:209497400698:layer:console:6'
+              - 'arn:aws:lambda:${AWS::Region}:209497400698:layer:console:6'
       Environment:
         Variables:
           TZ: Asia/Tokyo
