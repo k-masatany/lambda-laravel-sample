@@ -41,7 +41,7 @@ sam package \
 # deploy
 sam deploy \
     --template-file server/deploy/${APP_NAME}.${DEPLOY_ENV}.yml \
-    --stack-name ${STACK_NAME}_${DEPLOY_ENV} \
+    --stack-name ${STACK_NAME}-${DEPLOY_ENV} \
     --capabilities CAPABILITY_IAM \
     --parameter-overrides Env=${DEPLOY_ENV}
 
